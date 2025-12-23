@@ -54,3 +54,4 @@ python backtest_main.py
 2. **Temporal Integrity**: Strict adherence to "no look-ahead" rules using $w_{t-1} \cdot r_t$ logic.
 3. **Robustness**: Multi-layer fallbacks in the optimization process to handle non-convexity or lack of data.
 
+# portfolio_optimizer
