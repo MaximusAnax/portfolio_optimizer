@@ -1,4 +1,5 @@
 # Regime-Switching Portfolio Optimizer
+<!-- Git Test -->
 
 A professional quantitative finance pipeline for regime-aware portfolio optimization. This project uses Hidden Markov Models (HMM) to detect market regimes (e.g., Calm vs. Crisis) and dynamically adjusts portfolio allocations using Modern Portfolio Theory (MPT).
 
