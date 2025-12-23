@@ -1,0 +1,13 @@
+name: fin_pipeline
+dependencies:
+  - python=3.10
+  - pandas
+  - requests
+  - yfinance
+  - scikit-learn
+  - pip
+  - pip:
+    - python-dotenv
+    - hmmlearn
+    - PyPortfolioOpt
+    - scipy
