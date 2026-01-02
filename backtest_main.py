@@ -6,11 +6,20 @@ from src.metrics import MetricsEngine
 
 def main():
     # --- CONFIGURATION ---
-    TICKERS = ['AAPL', 'MSFT', 'GOOGL', 'TSLA']
+    # Diversified portfolio for regime-switching optimization:
+    # - Broad Market: SPY (S&P 500 ETF) for market exposure
+    # - Growth Stocks: AAPL, MSFT (tech growth, higher risk/reward)
+    # - Defensive Assets: GLD (Gold ETF), TLT (Long-term Treasury Bonds)
+    # - Utilities: XLU (Utilities sector, defensive equity)
+    TICKERS = ['SPY', 'AAPL', 'MSFT', 'GLD', 'TLT', 'XLU']
     WINDOW_SIZE = 252 # 1 Year training window
     REBALANCE_FREQ = 21 # Monthly rebalancing
     
     print("Initializing Regime-Switching Backtest...")
+    print(f"Portfolio: {', '.join(TICKERS)}")
+    print("  - Broad Market: SPY")
+    print("  - Growth: AAPL, MSFT")
+    print("  - Defensive: GLD (Gold), TLT (Bonds), XLU (Utilities)")
     
     # --- DATA ACQUISITION ---
     client = DataClient()
@@ -28,8 +37,13 @@ def main():
     asset_returns = results['asset_returns']
     
     # --- BENCHMARK ---
-    # Equal-weight benchmark for comparison
-    benchmark_returns = asset_returns.mean(axis=1)
+    # Use SPY (S&P 500) as benchmark if available, otherwise equal-weight
+    if 'SPY' in asset_returns.columns:
+        benchmark_returns = asset_returns['SPY']
+        benchmark_name = "S&P 500 (SPY)"
+    else:
+        benchmark_returns = asset_returns.mean(axis=1)
+        benchmark_name = "Equal-Weight Portfolio"
     
     # --- ANALYSIS ---
     metrics_engine = MetricsEngine()
@@ -40,6 +54,7 @@ def main():
     print("\n" + "="*30)
     print("BACKTEST RESULTS")
     print("="*30)
+    print(f"Benchmark: {benchmark_name}")
     print(f"{'Metric':<20} | {'Strategy':<10} | {'Benchmark':<10}")
     print("-" * 45)
     for m in strategy_metrics.keys():
@@ -61,7 +76,8 @@ def main():
     df_compare.to_csv('outputs/daily_returns.csv')
     
     # Visuals
-    metrics_engine.plot_results(strategy_returns, benchmark_returns)
+    metrics_engine.plot_results(strategy_returns, benchmark_returns, benchmark_name=benchmark_name)
+    metrics_engine.plot_regime_probabilities(results['probas'])
     
     print("\nBacktest Complete. Outputs saved to /outputs directory.")
 

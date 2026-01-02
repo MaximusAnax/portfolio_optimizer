@@ -80,7 +80,7 @@ class BacktestEngine:
             regime_probas.loc[dates[i:end_idx], 'prob_low_vol'] = prob_low
 
         # Clean up weight dataframe
-        all_weights = all_weights.fillna(method='ffill').dropna()
+        all_weights = all_weights.ffill().dropna()
         regime_probas = regime_probas.loc[all_weights.index]
         
         # 3. Calculate Strategy Returns
